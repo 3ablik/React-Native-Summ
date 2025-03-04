@@ -1,32 +1,34 @@
 import { create } from "zustand";
-import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UsersSlice from "./UsersSlice";
 import { Alert } from "react-native";
 
-const UsersStore = create((set, get) => ({
+const AuthSlice = create((set, get) => ({
   users: [],
   currentUsers: null,
 
-  getUsers: async () => {
-    const res = await JSON.parse(AsyncStorage.getItem("users"));
-    if (res) {
-      set({ users: res });
-      UsersSlice.setState((state) => ({ users: [...state.users, ...users] }));
+  getStoredUsers: async () => {
+    const storedUsers = await AsyncStorage.getItem("users");
+    if (storedUsers) {
+      console.log(storedUsers, "SSSSSSSS");
+      set({ users: JSON.parse(storedUsers) });
+    } else {
+      UsersSlice.getState().getUsers();
     }
   },
   login: async (loginData) => {
-    const { lastName, email, password } = loginData;
+    const { first_name, email } = loginData;
     const users = UsersSlice.getState().users;
     if (users.length > 0) {
       const user = users.find(
-        (user) => user.email === email && user.password === password
+        (user) => user.email === email && user.first_name === first_name
       );
       if (user) {
         set({ currentUsers: user });
         AsyncStorage.setItem("currentUsers", JSON.stringify(user));
+        console.log(currentUsers, "currentUsers");
       } else {
-        Alert.alert("Incorrect email or password!");
+        Alert.alert("Incorrect email or name!");
       }
     } else {
       getUsers();
@@ -34,15 +36,14 @@ const UsersStore = create((set, get) => ({
   },
 
   register: async (registerData) => {
-    const { firstName, lastName, email, password } = registerData;
+    const { first_name, lastName, email } = registerData;
     const users = UsersSlice.getState().users;
-    if (firstName && lastName && email && password) {
+    if (first_name && lastName && email) {
       const newUser = {
         id: users.length + 1,
-        firstName,
+        first_name,
         lastName,
         email,
-        password,
       };
       await UsersSlice.getState().addUser(newUser);
       set({ currentUsers: newUser });
@@ -58,4 +59,4 @@ const UsersStore = create((set, get) => ({
   },
 }));
 
-export default UsersStore;
+export default AuthSlice;

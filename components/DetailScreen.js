@@ -12,39 +12,18 @@ import AuthSlice from "../store/AuthSlice";
 export default function LoginScreen() {
   const navigation = useNavigation();
 
-  const { login, getStoredUsers } = AuthSlice();
+  const { logout, currentUser } = AuthSlice();
 
-  useEffect(() => {
-    getStoredUsers();
-  }, []);
-
-  const [first_name, setfirst_name] = useState("");
-  const [email, setEmail] = useState("");
-
-  const handlefirst_name = (e) => {
-    setfirst_name(e);
-  };
-  const handleEmailChange = (e) => {
-    setEmail(e);
-  };
+  console.log(currentUser, "currentUser");
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>LoginScreen</Text>
 
-      <Input onChangeText={handlefirst_name} value={first_name} />
-      <Input onChangeText={handleEmailChange} value={email} />
+      <Text>{currentUser.first_name}</Text>
 
       <Button
-        title="Login"
-        onPress={() => {
-          login({ email, first_name });
-          navigation.navigate("Home");
-        }}
-      />
-
-      <Button
-        title="Go to Register"
+        title="Log Out"
         onPress={() => {
           navigation.navigate("Reg");
         }}

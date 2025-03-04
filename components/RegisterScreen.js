@@ -1,37 +1,63 @@
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Text, View, SafeAreaView, Alert } from "react-native";
+import React, { useEffect, useState } from "react";
 
-import UsersSlice from "../store/UsersSlice";
 import AuthSlice from "../store/AuthSlice";
+import UsersSlice from "../store/UsersSlice";
 
 import { useNavigation } from "@react-navigation/native";
 
 import Input from "../shared/input/Input";
 import Button from "../shared/button/Button";
-
 export default function RegisterScreen() {
+  const { register } = AuthSlice();
+  const { users, getUsers } = UsersSlice();
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   const navigation = useNavigation();
 
-  const [user, setUser] = useState({});
-  const [firstName, setFirstName] = useState("");
+  const [first_name, setfirst_name] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
+  const handlefirst_nameChange = (e) => {
+    setfirst_name(e);
   };
 
   const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
+    setLastName(e);
   };
 
   const handleEmailChange = (e) => {
-    setEmail(e.target.value);
+    setEmail(e);
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
+  const handleRegister = async () => {
+    const registerData = {
+      first_name: first_name,
+      lastName: lastName,
+      email: email,
+    };
+
+    let error = null;
+
+    users.forEach((user) => {
+      if (user.email === email) {
+        error = "Email already exists";
+      }
+    });
+
+    if (error === null) {
+      await register(registerData);
+
+      console.log(users);
+
+      navigation.navigate("Log");
+    } else {
+      Alert.alert(error);
+    }
   };
 
   return (
@@ -39,8 +65,8 @@ export default function RegisterScreen() {
       <Text>RegisterScreen</Text>
       <Input
         placeholder={"First Name"}
-        onChangeText={handleFirstNameChange}
-        value={firstName}
+        onChangeText={handlefirst_nameChange}
+        value={first_name}
       />
       <Input
         placeholder={"Last Name"}
@@ -52,14 +78,13 @@ export default function RegisterScreen() {
         onChangeText={handleEmailChange}
         value={email}
       />
-      <Input
-        placeholder={"Password"}
-        secureTextEntry
-        onChangeText={handlePasswordChange}
-        value={password}
-      />
 
-      <Button onPress={() => {}} title="Register" />
+      <Button
+        onPress={() => {
+          handleRegister();
+        }}
+        title="Register"
+      />
 
       <Button title="Go to Login" onPress={() => navigation.navigate("Log")} />
     </SafeAreaView>
