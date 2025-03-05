@@ -14,10 +14,6 @@ export default function RegisterScreen() {
   const { register } = AuthSlice();
   const { users, getUsers } = UsersSlice();
 
-  useEffect(() => {
-    getUsers();
-  }, []);
-
   const navigation = useNavigation();
 
   const [first_name, setfirst_name] = useState("");
@@ -53,12 +49,7 @@ export default function RegisterScreen() {
 
     if (error === null) {
       await register(registerData);
-
-      console.log(users);
-
-      navigation.navigate("Log");
-    } else {
-      Alert.alert(error);
+      Alert.alert("User registered successfully!");
     }
   };
 

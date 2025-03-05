@@ -14,10 +14,6 @@ export default function LoginScreen() {
 
   const { login, getStoredUsers } = AuthSlice();
 
-  useEffect(() => {
-    getStoredUsers();
-  }, []);
-
   const [first_name, setfirst_name] = useState("");
   const [email, setEmail] = useState("");
 
@@ -32,14 +28,21 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.container}>
       <Text>LoginScreen</Text>
 
-      <Input onChangeText={handlefirst_name} placeholder="First Name" value={first_name} />
-      <Input onChangeText={handleEmailChange} placeholder='Email' value={email} />
+      <Input
+        onChangeText={handlefirst_name}
+        placeholder="First Name"
+        value={first_name}
+      />
+      <Input
+        onChangeText={handleEmailChange}
+        placeholder="Email"
+        value={email}
+      />
 
       <Button
         title="Login"
         onPress={() => {
           login({ email, first_name });
-          navigation.navigate("Home");
         }}
       />
 

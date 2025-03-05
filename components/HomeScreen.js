@@ -1,38 +1,48 @@
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
+import React, { useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import Input from "../shared/input/Input";
 import Button from "../shared/button/Button";
-
-import UsersSlice from "../store/UsersSlice";
-
 import { Flex } from "../shared/style";
 
-export default function HomeScreen() {
-  const { users, delUser } = UsersSlice();
-  console.log(users, "users home");
+import useUsersStore from "../store/UsersSlice";
+import useAuthStore from "../store/AuthSlice";
 
+export default function HomeScreen() {
+  const { delUser } = useUsersStore();
+  const users = useUsersStore((state) => state.users);
+
+  const getStoredUsers = useAuthStore((state) => state.getStoredUsers);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    getStoredUsers();
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>HomeScreen</Text>
-      <View style={styles.usersList}>
+      <ScrollView style={styles.usersList}>
         {Array.isArray(users) && users.length > 0 ? (
           users.map((user) => (
             <View key={user.id} style={styles.user}>
-              <Text onPress={() => navigation.navigate("Detail", { data: user })}>
+              <Text
+                onPress={() => navigation.navigate("Detail", { data: user })}
+              >
                 {user.first_name}
               </Text>
-              <Button title="Delete" onPress={() => delUser(user.id)} style={styles.btn} />
+              <Button
+                title="Delete"
+                onPress={() => delUser(user.id)}
+                style={styles.btn}
+              />
             </View>
           ))
         ) : (
-          <Text>No users available</Text>
+          <Text style={styles.user}>No users available</Text>
         )}
-      </View>
+      </ScrollView>
 
       <Button
         onPress={() => navigation.navigate("Reg")}
@@ -53,8 +63,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     width: 200,
-    alignItems: Flex.aic,
-    justifyContent: Flex.jcsa,
+    height: 100,
+    maxHeight: 300,
     borderWidth: 1,
     borderColor: "black",
     borderRadius: 5,
@@ -67,7 +77,8 @@ const styles = StyleSheet.create({
     height: 20,
     alignItems: Flex.aic,
     justifyContent: Flex.jcsa,
-    margin: 5,
+    marginTop: 20,
+    textAlign: "center",
   },
   btn: {
     backgroundColor: "red",
@@ -77,5 +88,5 @@ const styles = StyleSheet.create({
     width: "30%",
     height: 30,
     minWidth: 50,
-  }
+  },
 });
