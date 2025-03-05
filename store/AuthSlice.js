@@ -2,27 +2,11 @@ import { create } from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import UsersSlice from "./UsersSlice";
 import { Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
 const AuthSlice = create((set, get) => ({
   users: [],
   currentUsers: null,
-
-  getStoredUsers: async () => {
-    const storedUsers = await AsyncStorage.getItem("users");
-    if (storedUsers) {
-      const parsedUsers = JSON.parse(storedUsers);
-      set({ users: parsedUsers });
-      UsersSlice.setState(() => ({
-        users: [...parsedUsers],
-      }));
-    } else {
-      const res = await axios.get("https://reqres.in/api/users");
-      const users = res.data.data;
-      await AsyncStorage.setItem("users", JSON.stringify(users));
-      set({ users });
-    }
-  },
+  error: null,
 
   login: async (loginData) => {
     const { first_name, email } = loginData;
@@ -35,9 +19,9 @@ const AuthSlice = create((set, get) => ({
         set({ currentUsers: user });
         AsyncStorage.setItem("currentUsers", JSON.stringify(user));
         console.log(currentUsers, "currentUsers");
-        Alert.alert("Authentication successful!");
+        set({ error: null });
       } else {
-        Alert.alert("Incorrect email or name!");
+        set({ error: "Incorrect email or name!" });
       }
     } else {
       getUsers();

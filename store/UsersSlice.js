@@ -6,10 +6,18 @@ import AuthSlice from "./AuthSlice";
 const UsersSlice = create((set, get) => ({
   users: [],
   getUsers: async () => {
-    const response = await axios.get("https://reqres.in/api/users");
-    const ans = response.data.data;
-    const storedUsers = AuthSlice.getState().users || [];
-    set({ users: [...ans, ...storedUsers] });
+    if (get().users.length > 0) {
+      const ans = get().users;
+      const storedUsers = AuthSlice.getState().users || [];
+      set({ users: [...ans, ...storedUsers] });
+    } else {
+      const response = await axios.get("https://reqres.in/api/users");
+      const ans = response.data.data;
+      const storedUsers = AuthSlice.getState().users || [];
+      set({ users: [...ans, ...storedUsers] });
+    }
+    await AsyncStorage.setItem("users", JSON.stringify(get().users));
+    return get().users;
   },
 
   delUser: async (id) => {
