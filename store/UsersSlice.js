@@ -7,7 +7,7 @@ const UsersSlice = create((set, get) => ({
   users: [],
   getUsers: async () => {
     const { users } = get();
-    console.log(users);
+    console.log(users, "get users");
 
     if (users.length === 0) {
       const res = await axios.get("https://reqres.in/api/users");
@@ -19,13 +19,15 @@ const UsersSlice = create((set, get) => ({
       const users = await AsyncStorage.getItem("users");
       set({ users: JSON.parse(users) });
     }
+    AsyncStorage.setItem("users", JSON.stringify(users));
   },
 
   addUser: async (user) => {
     set((state) => {
+      const { users } = get();
       console.log(user, "add");
 
-      const updUsers = [...state.users, user];
+      const updUsers = [...users, user];
       console.log(updUsers, "upd");
 
       AsyncStorage.setItem("users", JSON.stringify(updUsers));

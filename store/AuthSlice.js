@@ -36,13 +36,13 @@ const AuthSlice = create((set, get) => ({
   },
 
   register: async (registerData) => {
-    const { first_name, lastName, email } = registerData;
+    const { first_name, last_name, email } = registerData;
     const users = UsersSlice.getState().users;
-    if (first_name && lastName && email) {
+    if (first_name && last_name && email) {
       const newUser = {
         id: users.length + 1,
         first_name,
-        lastName,
+        last_name,
         email,
       };
       await UsersSlice.getState().addUser(newUser);

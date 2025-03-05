@@ -8,6 +8,7 @@ import HomeScreen from "./components/HomeScreen";
 import LoginScreen from "./components/LoginScreen";
 import RegisterScreen from "./components/RegisterScreen";
 import DetailScreen from "./components/DetailScreen";
+import ProfileScreen from "./components/ProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,11 @@ export default function App() {
           name="Detail"
           options={{ headerShown: false }}
           component={DetailScreen}
+        />
+        <Stack.Screen
+          name="Profile"
+          options={{ headerShown: false }}
+          component={ProfileScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -8,6 +8,8 @@ import { useNavigation } from "@react-navigation/native";
 
 import Input from "../shared/input/Input";
 import Button from "../shared/button/Button";
+import { Flex } from "../shared/style";
+
 export default function RegisterScreen() {
   const { register } = AuthSlice();
   const { users, getUsers } = UsersSlice();
@@ -19,15 +21,15 @@ export default function RegisterScreen() {
   const navigation = useNavigation();
 
   const [first_name, setfirst_name] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [last_name, setlast_name] = useState("");
   const [email, setEmail] = useState("");
 
   const handlefirst_nameChange = (e) => {
     setfirst_name(e);
   };
 
-  const handleLastNameChange = (e) => {
-    setLastName(e);
+  const handlelast_nameChange = (e) => {
+    setlast_name(e);
   };
 
   const handleEmailChange = (e) => {
@@ -37,7 +39,7 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     const registerData = {
       first_name: first_name,
-      lastName: lastName,
+      last_name: last_name,
       email: email,
     };
 
@@ -70,8 +72,8 @@ export default function RegisterScreen() {
       />
       <Input
         placeholder={"Last Name"}
-        onChangeText={handleLastNameChange}
-        value={lastName}
+        onChangeText={handlelast_nameChange}
+        value={last_name}
       />
       <Input
         placeholder={"Email"}
@@ -95,7 +97,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: Flex.aic,
+    justifyContent: Flex.jcc,
   },
 });

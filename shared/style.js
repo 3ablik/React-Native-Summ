@@ -20,4 +20,5 @@ export const Flex = {
   aic: "center",
   jcc: "center",
   jcsb: "space-between",
+  jcsa: "space-around",
 };

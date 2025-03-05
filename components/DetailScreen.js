@@ -9,39 +9,34 @@ import Button from "../shared/button/Button";
 
 import AuthSlice from "../store/AuthSlice";
 
-export default function LoginScreen() {
-  const navigation = useNavigation();
+export default function DetailScreen({ route }) {
+    const user = route.params.data
+    console.log(user);
 
-  const { logout, currentUser } = AuthSlice();
 
-  console.log(currentUser, "currentUser");
+    const navigation = useNavigation();
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text>LoginScreen</Text>
+    return (
+        <SafeAreaView style={styles.container}>
+            <Text>DetailScreen</Text>
 
-      <Text>{currentUser.first_name}</Text>
+            <Text>{user.first_name}</Text>
+            <Text>{user.last_name}</Text>
 
-      <Button
-        title="Log Out"
-        onPress={() => {
-          navigation.navigate("Reg");
-        }}
-      />
-      <Button
-        title="Go to Home"
-        onPress={() => {
-          navigation.navigate("Home");
-        }}
-      />
-    </SafeAreaView>
-  );
+            <Button
+                title="Go to Home"
+                onPress={() => {
+                    navigation.navigate("Home");
+                }}
+            />
+        </SafeAreaView>
+    );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: Flex.aic,
-    justifyContent: Flex.jcc,
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        alignItems: Flex.aic,
+        justifyContent: Flex.jcc,
+    },
 });
