@@ -1,32 +1,70 @@
-import { StyleSheet, Text, View, SafeAreaView, ScrollView } from "react-native";
-import React, { useEffect } from "react";
-import { useNavigation } from "@react-navigation/native";
-
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
+import React, { useCallback } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Button from "../shared/button/Button";
+import Input from "../shared/input/Input";
 import { Flex } from "../shared/style";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
-import useUsersStore from "../store/UsersSlice";
+import UsersSlice from "../store/UsersSlice";
 import useAuthStore from "../store/AuthSlice";
 
 export default function HomeScreen() {
-  const { delUser } = useUsersStore();
-  const users = useUsersStore((state) => state.users);
-
-  const getStoredUsers = useAuthStore((state) => state.getStoredUsers);
+  const { delUser, getUsers, searchUser } = UsersSlice();
 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    getStoredUsers();
-  }, []);
+  console.log(UsersSlice.getState().userSliceUsers, "users home"); //Везде где есть users - это UsersSlice.getState().userSliceUsers. Иначе не работало
+  useFocusEffect(
+    useCallback(() => {
+      getUsers();
+      console.log("Экран монтирован!");
+
+      return () => {
+        console.log("Экран размонтирован!");
+      };
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>HomeScreen</Text>
-      <ScrollView style={styles.usersList}>
-        {Array.isArray(users) && users.length > 0 ? (
-          users.map((user) => (
-            <View key={user.id} style={styles.user}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Profile")}
+        style={{
+          position: "absolute",
+          top: 40,
+          right: 20,
+        }}
+      >
+        <FontAwesome5 name="user-circle" size={24} color="black" />
+      </TouchableOpacity>
+      <Text>Users List!</Text>
+      <View style={styles.usersList}>
+        <Input
+          onChangeText={(e) => {
+            searchUser(e.trim());
+            getUsers();
+          }}
+          placeholder="Search"
+          style={styles.input}
+        />
+        <FlatList
+          data={
+            UsersSlice.getState().searched.length > 0
+              ? UsersSlice.getState().searched
+              : UsersSlice.getState().userSliceUsers
+          }
+          keyExtractor={(user) => user.id.toString()}
+          renderItem={({ item: user }) => (
+            <View style={styles.user}>
               <Text
                 onPress={() => navigation.navigate("Detail", { data: user })}
               >
@@ -38,16 +76,14 @@ export default function HomeScreen() {
                 style={styles.btn}
               />
             </View>
-          ))
-        ) : (
-          <Text style={styles.user}>No users available</Text>
-        )}
-      </ScrollView>
+          )}
+          ListEmptyComponent={
+            <Text style={styles.user}>No user available</Text>
+          }
+        />
+      </View>
 
-      <Button
-        onPress={() => navigation.navigate("Reg")}
-        title="Go to Register"
-      />
+      <Text>Tab on user for details</Text>
     </SafeAreaView>
   );
 }

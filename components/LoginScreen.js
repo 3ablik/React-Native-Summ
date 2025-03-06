@@ -1,7 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Alert } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 import { Flex } from "../shared/style";
 
 import Input from "../shared/input/Input";
@@ -12,7 +11,7 @@ import AuthSlice from "../store/AuthSlice";
 export default function LoginScreen() {
   const navigation = useNavigation();
 
-  const { login, getStoredUsers } = AuthSlice();
+  const { login } = AuthSlice();
 
   const [first_name, setfirst_name] = useState("");
   const [email, setEmail] = useState("");
@@ -24,10 +23,29 @@ export default function LoginScreen() {
     setEmail(e);
   };
 
+  const handleLogin = async () => {
+    const loginData = {
+      first_name: first_name,
+      email: email,
+    };
+
+    console.log("handled login");
+
+    await login(loginData);
+
+    if (AuthSlice.getState().warning === null) {
+      Alert.alert("Login successful!");
+      navigation.navigate("Home");
+    } else {
+      Alert.alert(AuthSlice.getState().warning);
+      AuthSlice.setState((state) => ({ warning: null }));
+    }
+
+    console.log("123", AuthSlice.getState().warning);
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text>LoginScreen</Text>
-
       <Input
         onChangeText={handlefirst_name}
         placeholder="First Name"
@@ -42,20 +60,7 @@ export default function LoginScreen() {
       <Button
         title="Login"
         onPress={() => {
-          login({ email, first_name });
-        }}
-      />
-
-      <Button
-        title="Go to Register"
-        onPress={() => {
-          navigation.navigate("Reg");
-        }}
-      />
-      <Button
-        title="Go to Home"
-        onPress={() => {
-          navigation.navigate("Home");
+          handleLogin();
         }}
       />
     </SafeAreaView>

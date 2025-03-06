@@ -12,6 +12,7 @@ import { Flex } from "../shared/style";
 
 export default function RegisterScreen() {
   const { register } = AuthSlice();
+
   const { users, getUsers } = UsersSlice();
 
   const navigation = useNavigation();
@@ -39,23 +40,23 @@ export default function RegisterScreen() {
       email: email,
     };
 
-    let error = null;
+    console.log("handled register");
 
-    users.forEach((user) => {
-      if (user.email === email) {
-        error = "Email already exists";
-      }
-    });
+    await register(registerData);
 
-    if (error === null) {
-      await register(registerData);
-      Alert.alert("User registered successfully!");
+    if (AuthSlice.getState().warning === null) {
+      Alert.alert("Registration successful!");
+      navigation.navigate("Home");
+    } else {
+      Alert.alert(AuthSlice.getState().warning);
+      AuthSlice.setState((state) => ({ warning: null }));
     }
+
+    console.log("123", AuthSlice.getState().warning);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>RegisterScreen</Text>
       <Input
         placeholder={"First Name"}
         onChangeText={handlefirst_nameChange}
@@ -78,8 +79,6 @@ export default function RegisterScreen() {
         }}
         title="Register"
       />
-
-      <Button title="Go to Login" onPress={() => navigation.navigate("Log")} />
     </SafeAreaView>
   );
 }

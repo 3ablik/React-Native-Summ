@@ -10,33 +10,30 @@ import Button from "../shared/button/Button";
 import AuthSlice from "../store/AuthSlice";
 
 export default function DetailScreen({ route }) {
-    const user = route.params.data
-    console.log(user);
+  const user = route.params.data;
+  console.log(user);
 
+  const navigation = useNavigation();
 
-    const navigation = useNavigation();
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text>{user.first_name}</Text>
+      <Text>{user.last_name}</Text>
 
-    return (
-        <SafeAreaView style={styles.container}>
-            <Text>DetailScreen</Text>
-
-            <Text>{user.first_name}</Text>
-            <Text>{user.last_name}</Text>
-
-            <Button
-                title="Go to Home"
-                onPress={() => {
-                    navigation.navigate("Home");
-                }}
-            />
-        </SafeAreaView>
-    );
+      <Button
+        title="Go to Home"
+        onPress={() => {
+          navigation.navigate("Home");
+        }}
+      />
+    </SafeAreaView>
+  );
 }
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: Flex.aic,
-        justifyContent: Flex.jcc,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: Flex.aic,
+    justifyContent: Flex.jcc,
+  },
 });

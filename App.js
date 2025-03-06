@@ -1,56 +1,43 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 
-import HomeScreen from "./components/HomeScreen";
+import HomeStack from "./stack/HomeStack";
 import LoginScreen from "./components/LoginScreen";
 import RegisterScreen from "./components/RegisterScreen";
-import DetailScreen from "./components/DetailScreen";
-import ProfileScreen from "./components/ProfileScreen";
 
-const Stack = createNativeStackNavigator();
+import Feather from "@expo/vector-icons/Feather";
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
+      <Tab.Navigator>
+        <Tab.Screen
           name="Home"
-          options={{ headerShown: false }}
-          component={HomeScreen}
+          options={{
+            headerShown: false,
+            tabBarIcon: () => <Feather name="user" size={24} />,
+          }}
+          component={HomeStack}
         />
-        <Stack.Screen
-          name="Reg"
-          options={{ headerShown: false }}
-          component={RegisterScreen}
-        />
-        <Stack.Screen
-          name="Log"
-          options={{ headerShown: false }}
+        <Tab.Screen
+          name="Log In"
+          options={{
+            headerShown: false,
+            tabBarIcon: () => <Feather name="user-plus" size={24} />,
+          }}
           component={LoginScreen}
         />
-        <Stack.Screen
-          name="Detail"
-          options={{ headerShown: false }}
-          component={DetailScreen}
+        <Tab.Screen
+          name="Register"
+          options={{
+            headerShown: false,
+            tabBarIcon: () => <Feather name="user-check" size={24} />,
+          }}
+          component={RegisterScreen}
         />
-        <Stack.Screen
-          name="Profile"
-          options={{ headerShown: false }}
-          component={ProfileScreen}
-        />
-      </Stack.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
